@@ -6,7 +6,7 @@
   position: relative;
   min-height: clamp(600px, calc(100vh - var(--topbar-h) - 52px), 900px);
   border-radius: 18px;
-  border: 1px solid #263art;
+  border: 1px solid #2a1a20;
   border: 1px solid #263849;
   overflow: hidden;
   background: #0a1218;

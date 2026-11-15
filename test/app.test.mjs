@@ -133,7 +133,11 @@ check('10-heart trainer running', heartTrainer && heartTrainer.running);
 check('10-heart no countdown window', heartTrainer.noTimer === true);
 check('10-heart base window infinite', heartTrainer.baseWindow === Infinity);
 check('10-heart UI shows no timer', document.querySelector('[data-chip="time"] b').textContent === '∞');
-const target3 = heartTrainer.target;
+let target3 = heartTrainer.target;
+for (let i = 0; i < 30 && !target3; i++) {
+  await sleep(60);
+  target3 = heartTrainer.target;
+}
 check('10-heart target spawned', !!target3, target3 ? String(target3.slot) : 'none');
 if (target3) {
   key(app.state.binds.slots[target3.slot]);

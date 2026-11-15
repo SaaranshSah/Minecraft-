@@ -243,7 +243,10 @@ function renderDashboard() {
   const rec = state.records;
 
   if (el.hsSessions) el.hsSessions.textContent = fmt.int(stats.sessions);
-  if (el.hsAccuracy) el.hsAccuracy.textContent = stats.accuracy === null ? '—' : fmt.pct(stats.accuracy, 0);
+  if (el.hsAccuracy) {
+    const bestAcc = rec.bestAccuracy !== null && rec.bestAccuracy !== undefined ? rec.bestAccuracy : stats.accuracy;
+    el.hsAccuracy.textContent = bestAcc === null || bestAcc === undefined ? '—' : fmt.pct(bestAcc, 1);
+  }
   if (el.hsReaction) el.hsReaction.textContent = rec.fastestReaction ? `${Math.round(rec.fastestReaction)}ms` : '—';
   if (el.hsSwitches) el.hsSwitches.textContent = fmt.int(stats.switches);
 
@@ -260,7 +263,7 @@ function renderDashboard() {
 
   renderHistory(el.historyWrap, state.sessions.slice(0, 6));
 
-  renderPreviewHud(el.previewHud, 0.92);
+  renderPreviewHud(el.previewHud, 1.22);
   if (el.previewViewModel) el.previewViewModel.innerHTML = pxIcon(state.loadout[0]);
   if (el.previewKeys) {
     el.previewKeys.innerHTML = state.binds.slots
@@ -1715,7 +1718,7 @@ el.itemPicker && el.itemPicker.addEventListener('click', (e) => {
   hud.refreshItems();
   renderLoadout();
   renderBindGrid();
-  renderPreviewHud(el.previewHud, 0.92);
+  renderPreviewHud(el.previewHud, 1.22);
   if (el.settingsPreview) renderPreviewHud(el.settingsPreview, 0.82);
   if (el.previewViewModel) el.previewViewModel.innerHTML = pxIcon(state.loadout[0]);
   toast(`Slot ${loadoutSlot + 1} → ${itemName(chip.dataset.item)}`, 'ok', 1600);
@@ -1726,7 +1729,7 @@ el.resetLoadout && el.resetLoadout.addEventListener('click', () => {
   hud.refreshItems();
   renderLoadout();
   renderBindGrid();
-  renderPreviewHud(el.previewHud, 0.92);
+  renderPreviewHud(el.previewHud, 1.22);
   if (el.settingsPreview) renderPreviewHud(el.settingsPreview, 0.82);
   toast('Default loadout restored.', 'ok', 2000);
 });

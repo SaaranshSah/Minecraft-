@@ -1,7 +1,8 @@
 # SLOTCRAFT — Minecraft PvP Hotbar Trainer
 
-A competitive, browser-based hotbar switching trainer built around a Minecraft-accurate HUD.
-No login, no backend, no build step — open it and drill.
+A competitive, browser-based hotbar switching trainer built around a Minecraft-accurate HUD, wearing a
+pixel-GUI skin: bevelled maroon panels, cream accents, a Silkscreen wordmark and a cherry-grove sunset
+behind everything. No login, no backend, no build step — open it and drill.
 
 ![SLOTCRAFT dashboard](docs/screenshots/dashboard.jpg)
 
@@ -19,15 +20,17 @@ Or `npm start`, which runs the same server. Any static file server works (`npx s
 
 ## Screenshots
 
-| Difficulty training | Statistics |
+| Dashboard | Training arena |
 | --- | --- |
-| ![Arena](docs/screenshots/arena.jpg) | ![Statistics](docs/screenshots/statistics.jpg) |
+| ![Dashboard](docs/screenshots/dashboard.jpg) | ![Arena](docs/screenshots/arena.jpg) |
 
-| 10-Heart mode | Settings & keybinds |
+| Statistics | Settings & keybinds |
 | --- | --- |
-| ![10 hearts](docs/screenshots/ten-hearts.jpg) | ![Settings](docs/screenshots/settings.jpg) |
+| ![Statistics](docs/screenshots/statistics.jpg) | ![Settings](docs/screenshots/settings.jpg) |
 
-<p align="center"><img src="docs/screenshots/mobile.jpg" width="300" alt="Mobile layout"></p>
+| Session setup | Mobile |
+| --- | --- |
+| ![Setup](docs/screenshots/setup.jpg) | ![Mobile](docs/screenshots/mobile.jpg) |
 
 ## Modes
 
@@ -101,7 +104,14 @@ uncaught exception. Current status: **55 + 48 assertions, all passing**.
 
 ## Design notes
 
+* The interface is a single shell — backdrop, wordmark, vertical mode rail, content column — so every
+  view shares the same chrome. Panels are translucent glass with an inner hairline, a 2px outer edge and
+  cream corner brackets; the active rail item and primary button use the cream accent from the artwork.
 * The hotbar, hearts, hunger and XP bar are rebuilt as SVG pixel art so they stay crisp at any HUD scale.
+* The arena plays inside the same cherry-grove scene, dimmed by a vignette and a bottom scrim so the
+  hotbar, hearts and target cue stay readable over a bright sunset.
+* Type is two-tier: Silkscreen (SIL Open Font License, self-hosted in `assets/fonts/`) for the wordmark,
+  headings, stat values and keycaps; the system sans for body copy and controls.
 * Selection is a single animated frame element positioned from cached slot geometry — one transform per
   key press, no layout thrash, so input feels instant.
 * All session scheduling runs in one `requestAnimationFrame` loop in an "elapsed session time" domain,
@@ -111,6 +121,13 @@ uncaught exception. Current status: **55 + 48 assertions, all passing**.
   while typing in an input, a modal or on a button.
 * Chromium maps Mouse 4/5 to Back/Forward at the browser level, which no page can cancel — that is why
   the recovery snapshot exists. Everything else about the two side buttons behaves like any other bind.
+
+## Assets
+
+| File | Notes |
+| --- | --- |
+| `assets/backdrop.webp` | Cherry-grove sunset scene — AI-generated for this project, then downsampled to a 2px block grid. |
+| `assets/fonts/silkscreen-*.woff2` | Silkscreen by Jason Kottke, SIL Open Font License (`assets/fonts/OFL.txt`). |
 
 ## Browser support
 

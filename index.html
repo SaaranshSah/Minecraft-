@@ -7,93 +7,124 @@
 <meta name="description" content="A competitive Minecraft PvP hotbar switching trainer. Train muscle memory, reaction time and switching accuracy across Freestyle, five difficulty tiers and a no-timer 10-Heart mode." />
 <meta name="theme-color" content="#080b0e" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23080b0e'/%3E%3Crect x='2' y='3' width='12' height='10' fill='%23233a24'/%3E%3Crect x='2' y='3' width='12' height='3' fill='%237bd94a'/%3E%3Crect x='6' y='8' width='4' height='5' fill='%234a3320'/%3E%3C/svg%3E" />
+<link rel="preload" href="assets/fonts/silkscreen-400.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="assets/fonts/silkscreen-700.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="stylesheet" href="css/styles.css" />
 <link rel="stylesheet" href="css/hud.css" />
+<link rel="stylesheet" href="css/pixel.css" />
 </head>
 <body>
 <!-- pixel-art symbol sheet (generated) -->
 <svg id="px-sprites" width="0" height="0" aria-hidden="true" focusable="false"></svg>
 
+<div class="world" aria-hidden="true">
+  <div class="world-img"></div>
+  <div class="world-grade"></div>
+</div>
 <div class="fx-vignette" aria-hidden="true"></div>
+
+<div class="shell">
 
 <header class="topbar" id="topbar">
   <a class="brand" href="#dashboard" data-view="dashboard" aria-label="SLOTCRAFT home">
     <span class="brand-mark" aria-hidden="true">
-      <svg viewBox="0 0 16 16" class="pxicon"><use href="#px-logo"></use></svg>
+      <svg viewBox="0 0 16 16" class="pxicon blade blade-a"><use href="#px-sword"></use></svg>
+      <svg viewBox="0 0 16 16" class="pxicon blade blade-b"><use href="#px-sword"></use></svg>
     </span>
     <span class="brand-text">
       <strong>SLOT<span>//</span>CRAFT</strong>
-      <em>Minecraft PvP Hotbar Trainer</em>
+      <em>Practice <i>&bull;</i> Improve <i>&bull;</i> Dominate</em>
     </span>
   </a>
 
-  <nav class="mainnav" id="mainnav" aria-label="Main">
-    <button class="navlink is-active" data-view="dashboard">Dashboard</button>
-    <button class="navlink" data-view="freestyle">Freestyle</button>
-    <button class="navlink" data-view="training">Difficulty</button>
-    <button class="navlink" data-view="tenhearts">10-Heart</button>
-    <button class="navlink" data-view="custom">Custom</button>
-    <button class="navlink" data-view="stats">Statistics</button>
-    <button class="navlink" data-view="settings">Settings</button>
-  </nav>
-
   <div class="topbar-right">
+    <div class="badge-card" title="Best accuracy across every session">
+      <span class="badge-icon" aria-hidden="true">
+        <svg viewBox="0 0 24 24" class="uicon"><path d="M4 8l4 3 4-6 4 6 4-3-2 9H6z" fill="currentColor" opacity=".9"/><path d="M7 20h10" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </span>
+      <span class="badge-text"><em>Best accuracy</em><strong id="hsAccuracy">—</strong></span>
+    </div>
     <span class="status-pill" id="savePill" title="All settings and statistics are stored in this browser">
       <span class="dot"></span> Local save
     </span>
-    <button class="iconbtn" id="quickSfx" title="Toggle sound effects" aria-pressed="true">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="uicon"><path d="M4 9h3l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
-    </button>
-    <button class="iconbtn" id="quickFx" title="Toggle animations" aria-pressed="true">
-      <svg viewBox="0 0 24 24" aria-hidden="true" class="uicon"><path d="M12 2l2.2 5.6L20 9.8l-4.4 3.6L16.6 20 12 16.8 7.4 20l1-6.6L4 9.8l5.8-2.2z"/></svg>
-    </button>
   </div>
 </header>
+
+<div class="shell-body">
+
+<aside class="rail" aria-label="Modes">
+  <nav class="mainnav" id="mainnav">
+    <button class="navlink is-active" data-view="dashboard">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-logo"></use></svg>
+      <span>Dashboard</span>
+    </button>
+    <button class="navlink" data-view="freestyle">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-sword"></use></svg>
+      <span>Freestyle</span>
+    </button>
+    <button class="navlink" data-view="training">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-pickaxe"></use></svg>
+      <span>Difficulty</span>
+    </button>
+    <button class="navlink" data-view="tenhearts">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-heart"></use></svg>
+      <span>10-Heart</span>
+    </button>
+    <button class="navlink" data-view="custom">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-shield"></use></svg>
+      <span>Custom</span>
+    </button>
+    <button class="navlink" data-view="stats">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-potion"></use></svg>
+      <span>Statistics</span>
+    </button>
+    <button class="navlink" data-view="settings">
+      <svg viewBox="0 0 16 16" class="pxicon" aria-hidden="true"><use href="#px-book"></use></svg>
+      <span>Settings</span>
+    </button>
+  </nav>
+  <div class="rail-foot">
+    <span>Minecraft Inspired</span>
+    <span>Made for PvP</span>
+  </div>
+</aside>
 
 <main id="app">
 
   <!-- ============================== DASHBOARD ============================== -->
   <section class="view is-visible" id="view-dashboard" data-title="Dashboard">
-    <div class="hero panel">
-      <div class="hero-glow" aria-hidden="true"></div>
-      <div class="hero-copy">
-        <span class="eyebrow"><span class="eyebrow-dot"></span> Competitive hotbar trainer</span>
-        <h2>Switch faster.<br /><span class="accent">Miss less.</span></h2>
-        <p class="lede">Build raw hotbar muscle memory with a Minecraft-accurate HUD, five difficulty tiers and a 10-heart endurance mode. No login, no lag, instant keyboard response.</p>
-        <div class="hero-actions">
-          <button class="btn btn-primary" id="heroQuickStart">
-            <svg viewBox="0 0 24 24" class="uicon" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
-            Quick Start
-          </button>
-          <button class="btn btn-ghost" data-view="freestyle">Freestyle Practice</button>
-          <button class="btn btn-ghost" data-view="settings">Keybinds</button>
-        </div>
-        <div class="hero-stats">
-          <div class="hero-stat"><span class="hs-label">Sessions</span><strong id="hsSessions">0</strong></div>
-          <div class="hero-stat"><span class="hs-label">Accuracy</span><strong id="hsAccuracy">—</strong></div>
-          <div class="hero-stat"><span class="hs-label">Best reaction</span><strong id="hsReaction">—</strong></div>
-          <div class="hero-stat"><span class="hs-label">Total switches</span><strong id="hsSwitches">0</strong></div>
-        </div>
-      </div>
-      <div class="hero-visual">
-        <div class="preview-shell">
-          <div class="preview-tag">HUD preview</div>
-          <div class="preview-scene" aria-hidden="true">
-            <div class="preview-crosshair"></div>
-            <div class="preview-viewmodel" id="previewViewModel"></div>
+    <div class="dash">
+
+      <div class="dash-main">
+        <div class="start-card panel">
+          <span class="start-eyebrow"><i class="start-dot"></i> Competitive hotbar trainer</span>
+          <h2 class="start-title">Start Practice</h2>
+          <p class="start-sub">Jump in and improve your hotbar switching!</p>
+          <div class="start-actions">
+            <button class="btn btn-primary btn-lg" id="heroQuickStart">
+              <svg viewBox="0 0 24 24" class="uicon" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              Start Practice
+            </button>
+            <button class="btn btn-ghost" data-view="freestyle">Freestyle</button>
+            <button class="btn btn-ghost" data-view="settings">Keybinds</button>
           </div>
+          <div class="hero-stats">
+            <div class="hero-stat"><span class="hs-label">Sessions</span><strong id="hsSessions">0</strong></div>
+            <div class="hero-stat"><span class="hs-label">Total switches</span><strong id="hsSwitches">0</strong></div>
+            <div class="hero-stat"><span class="hs-label">Best reaction</span><strong id="hsReaction">&mdash;</strong></div>
+          </div>
+        </div>
+
+        <div class="hud-preview" aria-label="Hotbar preview">
           <div class="preview-hud" id="previewHud"></div>
           <div class="preview-keys" id="previewKeys"></div>
         </div>
-      </div>
-    </div>
 
-    <div class="section-head">
-      <h3>Training modes</h3>
-      <p>Pick a discipline. Every mode saves directly to this browser.</p>
-    </div>
+        <div class="section-head is-tight">
+          <div><h3>Training modes</h3><p>Pick a discipline. Every mode saves directly to this browser.</p></div>
+        </div>
 
-    <div class="mode-grid">
+        <div class="mode-grid">
       <article class="mode-card" data-mode="freestyle" tabindex="0">
         <div class="mc-top">
           <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-sword"></use></svg></span>
@@ -159,23 +190,24 @@
         <ul class="mc-meta"><li>Keybinds</li><li>Audio</li><li>HUD</li></ul>
         <span class="mc-go">Open settings <span aria-hidden="true">→</span></span>
       </article>
-    </div>
+        </div>
 
-    <div class="dash-grid">
-      <div class="panel">
-        <div class="panel-head">
-          <div><h3>Personal records</h3><p>Saved locally on this device</p></div>
-          <button class="btn btn-sm btn-ghost" data-view="stats">All stats</button>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Session history</h3><p>Your last practice runs</p></div>
+            <button class="btn btn-sm btn-ghost" id="exportStats">Export</button>
+          </div>
+          <div class="history-wrap" id="historyWrap"></div>
         </div>
-        <div class="record-grid" id="recordGrid"></div>
       </div>
-      <div class="panel">
-        <div class="panel-head">
-          <div><h3>Session history</h3><p>Your last practice runs</p></div>
-          <button class="btn btn-sm btn-ghost" id="exportStats">Export</button>
+
+      <aside class="dash-side">
+        <div class="panel stats-panel">
+          <div class="panel-head"><div><h3>Your stats</h3><p>All-time records on this device</p></div></div>
+          <div class="record-grid" id="recordGrid"></div>
         </div>
-        <div class="history-wrap" id="historyWrap"></div>
-      </div>
+
+      </aside>
     </div>
   </section>
 
@@ -362,6 +394,18 @@
     </div>
   </section>
 </main>
+</div><!-- /shell-body -->
+
+<div class="quick-toggles">
+  <button class="qtoggle" id="quickSfx" title="Toggle sound effects" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="uicon"><path d="M4 9h3l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+  </button>
+  <button class="qtoggle" id="quickFx" title="Toggle animations" aria-pressed="true">
+    <svg viewBox="0 0 24 24" aria-hidden="true" class="uicon"><path d="M12 2l2.2 5.6L20 9.8l-4.4 3.6L16.6 20 12 16.8 7.4 20l1-6.6L4 9.8l5.8-2.2z"/></svg>
+  </button>
+</div>
+
+</div><!-- /shell -->
 
 <div class="toast-stack" id="toastStack" aria-live="polite"></div>
 
