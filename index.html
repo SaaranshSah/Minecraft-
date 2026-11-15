@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="nether">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SLOTCRAFT — Minecraft PvP Hotbar Trainer</title>
+<meta name="description" content="A competitive Minecraft PvP hotbar switching trainer. Train muscle memory, reaction time and switching accuracy across Freestyle, five difficulty tiers and a no-timer 10-Heart mode." />
+<meta name="theme-color" content="#080b0e" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23080b0e'/%3E%3Crect x='2' y='3' width='12' height='10' fill='%23233a24'/%3E%3Crect x='2' y='3' width='12' height='3' fill='%237bd94a'/%3E%3Crect x='6' y='8' width='4' height='5' fill='%234a3320'/%3E%3C/svg%3E" />
+<link rel="stylesheet" href="css/styles.css" />
+<link rel="stylesheet" href="css/hud.css" />
+</head>
+<body>
+<!-- pixel-art symbol sheet (generated) -->
+<svg id="px-sprites" width="0" height="0" aria-hidden="true" focusable="false"></svg>
+
+<div class="fx-vignette" aria-hidden="true"></div>
+
+<header class="topbar" id="topbar">
+  <a class="brand" href="#dashboard" data-view="dashboard" aria-label="SLOTCRAFT home">
+    <span class="brand-mark" aria-hidden="true">
+      <svg viewBox="0 0 16 16" class="pxicon"><use href="#px-logo"></use></svg>
+    </span>
+    <span class="brand-text">
+      <strong>SLOT<span>//</span>CRAFT</strong>
+      <em>Minecraft PvP Hotbar Trainer</em>
+    </span>
+  </a>
+
+  <nav class="mainnav" id="mainnav" aria-label="Main">
+    <button class="navlink is-active" data-view="dashboard">Dashboard</button>
+    <button class="navlink" data-view="freestyle">Freestyle</button>
+    <button class="navlink" data-view="training">Difficulty</button>
+    <button class="navlink" data-view="tenhearts">10-Heart</button>
+    <button class="navlink" data-view="custom">Custom</button>
+    <button class="navlink" data-view="stats">Statistics</button>
+    <button class="navlink" data-view="settings">Settings</button>
+  </nav>
+
+  <div class="topbar-right">
+    <span class="status-pill" id="savePill" title="All settings and statistics are stored in this browser">
+      <span class="dot"></span> Local save
+    </span>
+    <button class="iconbtn" id="quickSfx" title="Toggle sound effects" aria-pressed="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="uicon"><path d="M4 9h3l5-4v14l-5-4H4z"/><path d="M16 8.5a5 5 0 0 1 0 7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+    </button>
+    <button class="iconbtn" id="quickFx" title="Toggle animations" aria-pressed="true">
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="uicon"><path d="M12 2l2.2 5.6L20 9.8l-4.4 3.6L16.6 20 12 16.8 7.4 20l1-6.6L4 9.8l5.8-2.2z"/></svg>
+    </button>
+  </div>
+</header>
+
+<main id="app">
+
+  <!-- ============================== DASHBOARD ============================== -->
+  <section class="view is-visible" id="view-dashboard" data-title="Dashboard">
+    <div class="hero panel">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-copy">
+        <span class="eyebrow"><span class="eyebrow-dot"></span> Competitive hotbar trainer</span>
+        <h2>Switch faster.<br /><span class="accent">Miss less.</span></h2>
+        <p class="lede">Build raw hotbar muscle memory with a Minecraft-accurate HUD, five difficulty tiers and a 10-heart endurance mode. No login, no lag, instant keyboard response.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" id="heroQuickStart">
+            <svg viewBox="0 0 24 24" class="uicon" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+            Quick Start
+          </button>
+          <button class="btn btn-ghost" data-view="freestyle">Freestyle Practice</button>
+          <button class="btn btn-ghost" data-view="settings">Keybinds</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><span class="hs-label">Sessions</span><strong id="hsSessions">0</strong></div>
+          <div class="hero-stat"><span class="hs-label">Accuracy</span><strong id="hsAccuracy">—</strong></div>
+          <div class="hero-stat"><span class="hs-label">Best reaction</span><strong id="hsReaction">—</strong></div>
+          <div class="hero-stat"><span class="hs-label">Total switches</span><strong id="hsSwitches">0</strong></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="preview-shell">
+          <div class="preview-tag">HUD preview</div>
+          <div class="preview-scene" aria-hidden="true">
+            <div class="preview-crosshair"></div>
+            <div class="preview-viewmodel" id="previewViewModel"></div>
+          </div>
+          <div class="preview-hud" id="previewHud"></div>
+          <div class="preview-keys" id="previewKeys"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <h3>Training modes</h3>
+      <p>Pick a discipline. Every mode saves directly to this browser.</p>
+    </div>
+
+    <div class="mode-grid">
+      <article class="mode-card" data-mode="freestyle" tabindex="0">
+        <div class="mc-top">
+          <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-sword"></use></svg></span>
+          <span class="mc-badge">Open</span>
+        </div>
+        <h4>Freestyle</h4>
+        <p>All nine slots, zero rules. Switch naturally and optionally chase random targets.</p>
+        <ul class="mc-meta"><li>Limitless</li><li>Random targets</li><li>Live CPS</li></ul>
+        <span class="mc-go">Start practising <span aria-hidden="true">→</span></span>
+      </article>
+
+      <article class="mode-card" data-mode="training" tabindex="0">
+        <div class="mc-top">
+          <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-pickaxe"></use></svg></span>
+          <span class="mc-badge is-gold">Ranked</span>
+        </div>
+        <h4>Difficulty Training</h4>
+        <p>Five tiers from Easy to Extreme with progressive speed and reaction windows.</p>
+        <ul class="mc-meta"><li>Easy → Extreme</li><li>Progressive</li><li>Sequences</li></ul>
+        <span class="mc-go">Choose difficulty <span aria-hidden="true">→</span></span>
+      </article>
+
+      <article class="mode-card" data-mode="tenhearts" tabindex="0">
+        <div class="mc-top">
+          <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-heart"></use></svg></span>
+          <span class="mc-badge is-red">No timer</span>
+        </div>
+        <h4>10-Heart Mode</h4>
+        <p>Exactly ten hearts, no countdown, no hunger, no damage. End the session when you decide.</p>
+        <ul class="mc-meta"><li>Unlimited</li><li>Full HUD</li><li>Endless</li></ul>
+        <span class="mc-go">Enter practice <span aria-hidden="true">→</span></span>
+      </article>
+
+      <article class="mode-card" data-mode="custom" tabindex="0">
+        <div class="mc-top">
+          <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-shield"></use></svg></span>
+          <span class="mc-badge is-cyan">Your rules</span>
+        </div>
+        <h4>Custom Practice</h4>
+        <p>Pick active slots, sequence length, reaction window and ramping yourself.</p>
+        <ul class="mc-meta"><li>Slot filter</li><li>Window</li><li>Ramp</li></ul>
+        <span class="mc-go">Configure drill <span aria-hidden="true">→</span></span>
+      </article>
+
+      <article class="mode-card" data-mode="stats" tabindex="0">
+        <div class="mc-top">
+          <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-potion"></use></svg></span>
+          <span class="mc-badge">Data</span>
+        </div>
+        <h4>Statistics</h4>
+        <p>Accuracy, reaction time, personal records and complete session history.</p>
+        <ul class="mc-meta"><li>Charts</li><li>Records</li><li>History</li></ul>
+        <span class="mc-go">Open stats <span aria-hidden="true">→</span></span>
+      </article>
+
+      <article class="mode-card" data-mode="settings" tabindex="0">
+        <div class="mc-top">
+          <span class="mc-icon"><svg viewBox="0 0 16 16" class="pxicon"><use href="#px-book"></use></svg></span>
+          <span class="mc-badge">Config</span>
+        </div>
+        <h4>Settings</h4>
+        <p>Keybinds, sound, animations, HUD scale, hotbar items and resets.</p>
+        <ul class="mc-meta"><li>Keybinds</li><li>Audio</li><li>HUD</li></ul>
+        <span class="mc-go">Open settings <span aria-hidden="true">→</span></span>
+      </article>
+    </div>
+
+    <div class="dash-grid">
+      <div class="panel">
+        <div class="panel-head">
+          <div><h3>Personal records</h3><p>Saved locally on this device</p></div>
+          <button class="btn btn-sm btn-ghost" data-view="stats">All stats</button>
+        </div>
+        <div class="record-grid" id="recordGrid"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head">
+          <div><h3>Session history</h3><p>Your last practice runs</p></div>
+          <button class="btn btn-sm btn-ghost" id="exportStats">Export</button>
+        </div>
+        <div class="history-wrap" id="historyWrap"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== ARENA ============================== -->
+  <section class="view" id="view-arena" data-title="Practice">
+    <div class="arena" id="arenaRoot">
+      <div class="scene" aria-hidden="true">
+        <div class="scene-sky"></div>
+        <div class="scene-moon"></div>
+        <div class="scene-clouds"></div>
+        <div class="scene-hills" id="sceneHills"></div>
+        <div class="scene-ground"></div>
+        <div class="scene-vignette"></div>
+      </div>
+
+      <header class="arena-head">
+        <div class="arena-title">
+          <span class="mode-chip" id="arenaModeName">Freestyle</span>
+          <span class="arena-sub" id="arenaSub">Warm-up · no rules</span>
+        </div>
+        <div class="arena-chips" id="arenaChips"></div>
+        <div class="arena-actions">
+          <button class="btn btn-sm btn-ghost" id="btnPause">Pause</button>
+          <button class="btn btn-sm btn-danger" id="btnEnd">End session</button>
+        </div>
+      </header>
+
+      <div class="cue" id="cueLayer">
+        <div class="cue-inner">
+          <div class="cue-label" id="cueLabel">FREESTYLE</div>
+          <div class="cue-prompt" id="cuePrompt">Switch freely</div>
+          <div class="cue-hint" id="cueHint">Press any hotbar key</div>
+        </div>
+        <div class="cue-window" id="cueWindow"><div class="cue-window-fill" id="cueWindowFill"></div></div>
+      </div>
+
+      <div class="crosshair" id="crosshair" aria-hidden="true"><i></i><i></i></div>
+
+      <aside class="arena-side" id="arenaSide"></aside>
+
+      <div class="arena-hud">
+        <div class="hud-inner" id="hudInner">
+          <div class="xp-shell">
+            <div class="xp-level" id="xpLevel">0</div>
+            <div class="xp-track"><div class="xp-fill" id="xpFill"></div><div class="xp-ticks"></div></div>
+          </div>
+          <div class="bar-row">
+            <div class="hearts" id="hearts" aria-label="10 hearts"></div>
+            <div class="hunger" id="hunger" aria-label="Hunger bar"></div>
+          </div>
+          <div class="hotbar-wrap">
+            <div class="hotbar" id="hotbar"></div>
+            <div class="sel-frame" id="selFrame" aria-hidden="true"></div>
+            <div class="target-marker" id="targetMarker" aria-hidden="true"></div>
+          </div>
+          <div class="keyrow" id="keyRow"></div>
+        </div>
+      </div>
+
+      <div class="viewmodel" id="viewmodel" aria-hidden="true"></div>
+      <div class="hitmarker" id="hitmarker" aria-hidden="true"></div>
+      <div class="streak-pop" id="streakPop" aria-hidden="true"></div>
+      <canvas class="fx-canvas" id="fxCanvas" aria-hidden="true"></canvas>
+      <div class="arena-hintbar" id="arenaHintBar"></div>
+      <div class="arena-overlay" id="arenaOverlay" hidden></div>
+    </div>
+  </section>
+
+  <!-- ============================== STATISTICS ============================== -->
+  <section class="view" id="view-stats" data-title="Statistics">
+    <div class="section-head is-tight">
+      <div>
+        <h3>Performance statistics</h3>
+        <p>Everything is measured from your judged switches and stored on this device.</p>
+      </div>
+      <button class="btn btn-sm btn-danger-ghost" id="resetStatsBtn">Reset statistics</button>
+    </div>
+    <div class="stat-strip" id="statStrip"></div>
+    <div class="stats-grid">
+      <div class="panel">
+        <div class="panel-head"><div><h3>Accuracy trend</h3><p>Last 20 sessions with judged presses</p></div><span class="legend"><i class="dot-green"></i>accuracy</span></div>
+        <div class="chart" id="chartAccuracy"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Average reaction</h3><p>Lower is better · milliseconds</p></div><span class="legend"><i class="dot-gold"></i>ms</span></div>
+        <div class="chart" id="chartReaction"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Switching speed</h3><p>Switches per session</p></div></div>
+        <div class="chart" id="chartVolume"></div>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><div><h3>Difficulty breakdown</h3><p>Best accuracy per tier</p></div></div>
+        <div class="diff-list" id="diffList"></div>
+      </div>
+      <div class="panel is-wide">
+        <div class="panel-head">
+          <div><h3>History</h3><p>Newest first · 40 sessions kept</p></div>
+          <button class="btn btn-sm btn-ghost" id="exportStats2">Export JSON</button>
+        </div>
+        <div class="history-wrap" id="historyWrapFull"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== SETTINGS ============================== -->
+  <section class="view" id="view-settings" data-title="Settings">
+    <div class="section-head is-tight">
+      <div><h3>Settings</h3><p>Controls, feedback and HUD. Changes save instantly to LocalStorage.</p></div>
+      <div class="head-actions">
+        <button class="btn btn-sm btn-ghost" id="resetSettingsBtn">Reset settings</button>
+      </div>
+    </div>
+
+    <div class="settings-grid">
+      <div class="panel is-wide">
+        <div class="panel-head">
+          <div>
+            <h3>Hotbar keybinds</h3>
+            <p>Click a slot, then press a key, click a mouse button or scroll. Every slot keeps a binding.</p>
+          </div>
+          <div class="panel-actions">
+            <button class="btn btn-sm btn-ghost" id="bindReset">Reset to default</button>
+          </div>
+        </div>
+        <div class="bind-grid" id="bindGrid"></div>
+        <div class="bind-note">
+          <svg viewBox="0 0 24 24" class="uicon" aria-hidden="true"><path d="M12 2l9 16H3z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 9v4M12 16h.01" stroke="currentColor" stroke-width="1.7"/></svg>
+          <span>Mouse 4 and Mouse 5 are the only extra mouse buttons supported. Middle-click is ignored. Duplicate bindings are swapped or blocked — never silently doubled.</span>
+        </div>
+        <div class="bind-warning" id="bindWarning" hidden></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>Action keybinds</h3><p>Utility controls used in the arena</p></div></div>
+        <div class="bind-list" id="actionBinds"></div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>Feedback</h3><p>Audio and animation preferences</p></div></div>
+        <div class="toggle-list" id="toggleList"></div>
+        <div class="range-row">
+          <label for="volumeRange">Volume <output id="volumeOut">60%</output></label>
+          <input type="range" id="volumeRange" min="0" max="100" step="5" />
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><div><h3>HUD &amp; appearance</h3><p>Scale the in-arena interface</p></div></div>
+        <div class="range-row">
+          <label for="hudScaleRange">HUD scale <output id="hudScaleOut">100%</output></label>
+          <input type="range" id="hudScaleRange" min="80" max="150" step="5" />
+        </div>
+        <div class="field-block">
+          <span class="field-label">Theme</span>
+          <div class="segmented" id="themeSegmented">
+            <button data-theme-value="nether">Nether</button>
+            <button data-theme-value="deep">Deep Dark</button>
+            <button data-theme-value="overworld">Overworld</button>
+          </div>
+        </div>
+        <div class="preview-mini" id="settingsPreview"></div>
+      </div>
+
+      <div class="panel is-wide">
+        <div class="panel-head">
+          <div><h3>Hotbar items</h3><p>Choose the nine items loaded into your hotbar</p></div>
+          <button class="btn btn-sm btn-ghost" id="resetLoadout">Default loadout</button>
+        </div>
+        <div class="loadout" id="loadout"></div>
+        <div class="item-picker" id="itemPicker"></div>
+      </div>
+
+      <div class="panel is-wide danger-zone">
+        <div class="panel-head"><div><h3>Data</h3><p>Stored locally. Nothing leaves this browser.</p></div></div>
+        <div class="dz-actions">
+          <button class="btn btn-sm btn-ghost" id="exportAll">Export data</button>
+          <button class="btn btn-sm btn-ghost" id="importAll">Import data</button>
+          <button class="btn btn-sm btn-danger-ghost" id="resetStatsBtn2">Reset statistics</button>
+          <button class="btn btn-sm btn-danger-ghost" id="wipeAll">Reset everything</button>
+        </div>
+        <input type="file" id="importFile" accept="application/json" hidden />
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="toast-stack" id="toastStack" aria-live="polite"></div>
+
+<!-- modal layer -->
+<div class="modal-layer" id="modalLayer" hidden>
+  <div class="modal-scrim" data-close-modal="1"></div>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-head">
+      <div>
+        <span class="modal-eyebrow" id="modalEyebrow">Setup</span>
+        <h3 id="modalTitle">Configure session</h3>
+      </div>
+      <button class="iconbtn" data-close-modal="1" aria-label="Close">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

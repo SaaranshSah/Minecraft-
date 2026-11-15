@@ -1,0 +1,14 @@
+{
+  "name": "slotcraft-hotbar-trainer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "SLOTCRAFT — a Minecraft-styled PvP hotbar switching trainer that runs entirely in the browser.",
+  "type": "module",
+  "scripts": {
+    "start": "python3 -m http.server 4173",
+    "test": "node test/run.mjs"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0"
+  }
+}
