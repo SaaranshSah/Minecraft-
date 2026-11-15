@@ -9,6 +9,8 @@ import {
   MODE_LABELS,
   MODE_META,
   SLOT_COUNT,
+  HOTBAR_PRESETS,
+  findPreset,
 } from './data.js';
 import { InputHub, bindLabel } from './keybinds.js';
 import { Hud, renderPreviewHud } from './hud.js';
@@ -98,6 +100,8 @@ const el = {
   settingsPreview: $('#settingsPreview'),
   loadout: $('#loadout'),
   itemPicker: $('#itemPicker'),
+  presetGrid: $('#presetGrid'),
+  presetCurrent: $('#presetCurrent'),
   resetLoadout: $('#resetLoadout'),
   importFile: $('#importFile'),
 
@@ -397,6 +401,7 @@ const TOGGLES = [
 
 function renderSettings() {
   renderBindSettings();
+  renderPresets();
   renderToggles();
   renderRanges();
   renderTheme();
@@ -568,6 +573,42 @@ function afterBindsChanged() {
   if (el.previewKeys) {
     el.previewKeys.innerHTML = state.binds.slots.map((b, i) => `<span title="Slot ${i + 1}">${fmt.escape(bindLabel(b, true))}</span>`).join('');
   }
+}
+
+function renderPresets() {
+  if (!el.presetGrid) return;
+  const active = findPreset(state.loadout);
+  if (el.presetCurrent) {
+    el.presetCurrent.textContent = active ? active.name : 'Custom';
+    el.presetCurrent.classList.toggle('is-custom', !active);
+  }
+  el.presetGrid.innerHTML = HOTBAR_PRESETS.map((preset) => {
+    const isOn = active && active.id === preset.id;
+    return `<button class="preset-card ${isOn ? 'is-on' : ''}" data-preset="${preset.id}" type="button" aria-pressed="${isOn ? 'true' : 'false'}">
+      <span class="pc-head">
+        <span class="pc-name">${fmt.escape(preset.name)}</span>
+        <span class="pc-tag">${fmt.escape(preset.tag)}</span>
+      </span>
+      <span class="pc-bar">${preset.slots.map((id) => `<span class="pc-slot" title="${fmt.escape(itemName(id))}">${pxIcon(id)}</span>`).join('')}</span>
+      <span class="pc-blurb">${fmt.escape(preset.blurb)}</span>
+    </button>`;
+  }).join('');
+}
+
+function applyPreset(id) {
+  const preset = HOTBAR_PRESETS.find((p) => p.id === id);
+  if (!preset) return;
+  if (!store.setLoadout(preset.slots)) return;
+  loadoutSlot = 0;
+  hud.refreshItems();
+  renderLoadout();
+  renderPresets();
+  renderBindGrid();
+  renderPreviewHud(el.previewHud, 1.22);
+  if (el.settingsPreview) renderPreviewHud(el.settingsPreview, 0.82);
+  if (el.previewViewModel) el.previewViewModel.innerHTML = pxIcon(state.loadout[0]);
+  toast(`${preset.name} loaded — ${preset.slots.length} slots.`, 'ok', 2200);
+  audio.ui();
 }
 
 function renderLoadout() {
@@ -1703,6 +1744,13 @@ el.themeSegmented && el.themeSegmented.addEventListener('click', (e) => {
   renderTheme();
 });
 
+/* settings: hotbar presets */
+el.presetGrid && el.presetGrid.addEventListener('click', (e) => {
+  const card = e.target.closest('[data-preset]');
+  if (!card) return;
+  applyPreset(card.dataset.preset);
+});
+
 /* settings: loadout */
 el.loadout && el.loadout.addEventListener('click', (e) => {
   const pick = e.target.closest('[data-loadout-slot]');
@@ -1717,6 +1765,7 @@ el.itemPicker && el.itemPicker.addEventListener('click', (e) => {
   store.setLoadoutItem(loadoutSlot, chip.dataset.item);
   hud.refreshItems();
   renderLoadout();
+  renderPresets();
   renderBindGrid();
   renderPreviewHud(el.previewHud, 1.22);
   if (el.settingsPreview) renderPreviewHud(el.settingsPreview, 0.82);
@@ -1728,6 +1777,7 @@ el.resetLoadout && el.resetLoadout.addEventListener('click', () => {
   store.resetLoadout();
   hud.refreshItems();
   renderLoadout();
+  renderPresets();
   renderBindGrid();
   renderPreviewHud(el.previewHud, 1.22);
   if (el.settingsPreview) renderPreviewHud(el.settingsPreview, 0.82);

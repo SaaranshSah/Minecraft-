@@ -259,6 +259,52 @@ store.saveRecovery(snapshot);
 store.pushSession(store.takeRecovery());
 check('recovered session added to history', app.state.sessions.length === sessionsBeforeRecovery + 1);
 
+/* ---------- hotbar presets ---------- */
+const data = await import(`${root}/js/data.js`);
+const pixels = await import(`${root}/js/pixelart.js`);
+check('preset library has 11 layouts', data.HOTBAR_PRESETS.length === 11, String(data.HOTBAR_PRESETS.length));
+check('every preset fills all nine slots with real items',
+  data.HOTBAR_PRESETS.every((p) => p.slots.length === 9 && p.slots.every((id) => pixels.ITEM_IDS.includes(id))));
+check('preset ids are unique', new Set(data.HOTBAR_PRESETS.map((p) => p.id)).size === data.HOTBAR_PRESETS.length);
+check('default loadout maps to the starter preset', data.findPreset(data.DEFAULT_LOADOUT)?.id === 'starter');
+
+app.navigate('settings');
+await sleep(40);
+click('#resetLoadout');
+await sleep(40);
+check('preset cards rendered', document.querySelectorAll('#presetGrid [data-preset]').length === 11);
+check('active preset card flagged', document.querySelector('#presetGrid .preset-card.is-on')?.dataset.preset === 'starter');
+check('preset badge reads the preset name', document.getElementById('presetCurrent').textContent === 'Starter Kit');
+
+click('[data-preset="crystal"]');
+await sleep(40);
+check('preset click loads its layout', app.state.loadout.join(',') === 'sword,pearl,apple,obsidian,crystal,bucket,totem,pickaxe,cobble', app.state.loadout.join(','));
+check('preset badge follows the applied layout', document.getElementById('presetCurrent').textContent === 'Crystal PvP');
+check('preset card marked active after load', document.querySelector('.preset-card.is-on')?.dataset.preset === 'crystal');
+check('hotbar shows the new fifth item', document.querySelectorAll('#hotbar .slot')[4].title.startsWith('End Crystal'));
+await sleep(400);
+check('preset load persisted', JSON.parse(localStorage.getItem('slotcraft.hotbar-trainer.v1')).loadout[4] === 'crystal');
+
+click('[data-loadout-slot="7"]');
+await sleep(20);
+click('[data-item="eggs"]');
+await sleep(40);
+check('single slot stays swappable after a preset', app.state.loadout[7] === 'eggs');
+check('edited preset falls back to Custom', document.getElementById('presetCurrent').textContent === 'Custom');
+check('no preset card highlighted once customised', !document.querySelector('.preset-card.is-on'));
+
+const everyItem = pixels.ITEM_IDS.length;
+check('item library has 23 items', everyItem === 23, String(everyItem));
+check('every item has a sprite', pixels.ITEM_IDS.every((id) => pixels.hasIcon(id)));
+check('item picker offers every item', document.querySelectorAll('#itemPicker [data-item]').length === everyItem);
+
+click('[data-preset="uhc"]');
+await sleep(40);
+check('second preset applies too', app.state.loadout.join(',') === 'sword,cobble,shovel,apple,pearl,bucket,lava,bow,totem', app.state.loadout.join(','));
+click('#resetLoadout');
+await sleep(40);
+check('reset returns to the starter preset', app.state.loadout.join(',') === data.DEFAULT_LOADOUT.join(',') && document.getElementById('presetCurrent').textContent === 'Starter Kit');
+
 console.log('\nRuntime errors captured:', errors.length);
 errors.slice(0, 12).forEach((e) => console.log('  !', e));
 

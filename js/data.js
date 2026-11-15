@@ -6,6 +6,97 @@ export const SLOT_COUNT = 9;
 
 export const DEFAULT_LOADOUT = ['sword', 'pickaxe', 'axe', 'bow', 'apple', 'pearl', 'potion', 'cobble', 'bucket'];
 
+/**
+ * Community PvP hotbar layouts. Each preset fills all nine slots; picking one
+ * replaces the loadout, and individual slots can still be swapped afterwards.
+ */
+export const HOTBAR_PRESETS = [
+  {
+    id: 'starter',
+    name: 'Starter Kit',
+    tag: 'Default',
+    blurb: 'The balanced loadout the trainer ships with.',
+    slots: ['sword', 'pickaxe', 'axe', 'bow', 'apple', 'pearl', 'potion', 'cobble', 'bucket'],
+  },
+  {
+    id: 'classic',
+    name: 'Classic PvP',
+    tag: 'Balanced',
+    blurb: 'Best for all-round PvP — sword, gapple, pearls and pots.',
+    slots: ['sword', 'apple', 'pearl', 'potion', 'pickaxe', 'bucket', 'cobble', 'totem', 'carrot'],
+  },
+  {
+    id: 'swordpearl',
+    name: 'Sword & Pearl',
+    tag: 'Aggressive',
+    blurb: 'Instant pressure — pearls in slot 2, gapple right behind.',
+    slots: ['sword', 'pearl', 'apple', 'potion', 'pickaxe', 'cobble', 'bucket', 'totem', 'carrot'],
+  },
+  {
+    id: 'rush',
+    name: 'Rush Hotbar',
+    tag: 'Fast combos',
+    blurb: 'Sword, axe and bow up front for 1v1 fights.',
+    slots: ['sword', 'axe', 'bow', 'apple', 'pearl', 'pickaxe', 'bucket', 'cobble', 'totem'],
+  },
+  {
+    id: 'crystal',
+    name: 'Crystal PvP',
+    tag: 'Advanced',
+    blurb: 'Crystals and obsidian — keep the water bucket close.',
+    slots: ['sword', 'pearl', 'apple', 'obsidian', 'crystal', 'bucket', 'totem', 'pickaxe', 'cobble'],
+  },
+  {
+    id: 'bedrock',
+    name: 'Bedrock Edition',
+    tag: 'Survival',
+    blurb: 'Lava-bucket clutches and simple, effective survival PvP.',
+    slots: ['sword', 'axe', 'bow', 'apple', 'pearl', 'potion', 'pickaxe', 'lava', 'cobble'],
+  },
+  {
+    id: 'hybrid',
+    name: 'Hybrid',
+    tag: 'Combo + crystal',
+    blurb: 'Both worlds — sword combo pressure plus a crystal slot.',
+    slots: ['sword', 'pearl', 'apple', 'crystal', 'potion', 'bucket', 'cobble', 'totem', 'obsidian'],
+  },
+  {
+    id: 'cart',
+    name: 'Cart PvP',
+    tag: 'Blocks',
+    blurb: 'Block-heavy minecart pressure with a bow fallback.',
+    slots: ['sword', 'cobble', 'bow', 'pickaxe', 'totem', 'apple', 'pearl', 'obsidian', 'bucket'],
+  },
+  {
+    id: 'uhc',
+    name: 'UHC',
+    tag: 'No regen',
+    blurb: 'No natural regen — lava, shovel and a careful gapple.',
+    slots: ['sword', 'cobble', 'shovel', 'apple', 'pearl', 'bucket', 'lava', 'bow', 'totem'],
+  },
+  {
+    id: 'smp',
+    name: 'SMP',
+    tag: 'All-round',
+    blurb: 'Trident, cobwebs and snowballs for chaotic servers.',
+    slots: ['sword', 'trident', 'shovel', 'pickaxe', 'apple', 'pearl', 'cobweb', 'snowball', 'totem'],
+  },
+  {
+    id: 'minimalist',
+    name: 'Minimalist',
+    tag: 'Clean & fast',
+    blurb: 'Fewer distractions, faster switching — high CPS.',
+    slots: ['sword', 'bow', 'apple', 'pearl', 'pickaxe', 'cobble', 'totem', 'carrot', 'bucket'],
+  },
+];
+
+/** Which preset (if any) exactly matches a loadout. */
+export function findPreset(loadout) {
+  if (!Array.isArray(loadout)) return null;
+  const key = loadout.join('|');
+  return HOTBAR_PRESETS.find((preset) => preset.slots.join('|') === key) || null;
+}
+
 export const DEFAULT_BINDS = {
   slots: ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9'],
   actions: {

@@ -1006,3 +1006,84 @@ input[type='range']::-moz-range-thumb {
   .arena-hintbar { display: none; }
   .cue { top: 150px; }
 }
+
+/* ============================================================
+   hotbar presets
+   ============================================================ */
+.preset-current {
+  font-family: var(--pixel);
+  font-size: 10px;
+  letter-spacing: .04em;
+  padding: 5px 9px;
+  color: #2b1a15;
+  background: var(--cream);
+  border-radius: 2px;
+  white-space: nowrap;
+}
+.preset-current.is-custom {
+  color: var(--cream);
+  background: rgba(247, 232, 194, .1);
+  border: 1px solid var(--cream-dim);
+}
+
+.preset-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+.preset-card {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  padding: 12px 13px 13px;
+  text-align: left;
+  font-family: var(--font);
+  color: var(--ink-soft);
+  background: rgba(0, 0, 0, .22);
+  border: 2px solid var(--plum-line-soft);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: transform .14s var(--ease), border-color .14s var(--ease), background .14s var(--ease);
+}
+.preset-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--cream-dim);
+  background: rgba(255, 240, 225, .07);
+}
+.preset-card.is-on {
+  border-color: var(--cream);
+  background: rgba(247, 232, 194, .1);
+  box-shadow: inset 0 0 0 2px rgba(247, 232, 194, .26);
+}
+.pc-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pc-name { font-family: var(--pixel); font-size: 11.5px; color: #fff; }
+.pc-tag {
+  font-size: 9.5px;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  color: var(--mute);
+  border: 1px solid var(--plum-line-soft);
+  border-radius: 2px;
+  padding: 2px 5px;
+  white-space: nowrap;
+}
+.preset-card.is-on .pc-tag { color: #2b1a15; background: var(--cream); border-color: var(--cream); }
+.pc-bar { display: grid; grid-template-columns: repeat(9, minmax(0, 1fr)); gap: 2px; }
+.pc-slot {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  padding: 2px;
+  background: rgba(0, 0, 0, .38);
+  border: 1px solid var(--plum-line-soft);
+  border-radius: 1px;
+}
+.pc-slot .pxicon { width: 100%; height: 100%; }
+.pc-blurb { font-size: 11.5px; line-height: 1.4; color: var(--mute); }
+
+@media (max-width: 1080px) {
+  .preset-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .preset-grid { grid-template-columns: minmax(0, 1fr); }
+}

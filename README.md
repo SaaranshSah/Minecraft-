@@ -32,6 +32,24 @@ Or `npm start`, which runs the same server. Any static file server works (`npx s
 | --- | --- |
 | ![Setup](docs/screenshots/setup.jpg) | ![Mobile](docs/screenshots/mobile.jpg) |
 
+| Hotbar loadouts |
+| --- |
+| ![Hotbar presets and per-slot item swapping](docs/screenshots/loadouts.jpg) |
+
+## Hotbar loadouts
+
+Eleven hotbar layouts ship with the trainer, taken from common PvP practice —
+**Starter Kit, Classic PvP, Sword & Pearl, Rush, Crystal PvP, Bedrock Edition, Hybrid, Cart, UHC,
+SMP and Minimalist**. Pick one in **Settings → Hotbar presets** and all nine slots are rewritten at
+once; the badge in that panel always shows which preset you are on (or `Custom` once you edit it).
+
+Every slot is still swappable on its own: click a numbered slot under **Hotbar items**, then pick any
+of the 23 supported items — sword, pickaxes, axe, shovel, bow, arrows, shield, trident, golden apple,
+golden carrot, splash potion, ender pearl, totem of undying, end crystal, obsidian, cobblestone,
+water bucket, lava bucket, cobweb, eggs, snowballs, diamond, enchanted book. Each item keeps its own
+stack size, so the hotbar counter reads like the real game. Choices are stored locally and restored
+on reload.
+
 ## Modes
 
 | Mode | What it does |
@@ -86,7 +104,7 @@ js/store.js           LocalStorage persistence, stats aggregation, records
 js/audio.js           synthesised WebAudio SFX (no audio files)
 js/particles.js       canvas particle bursts
 js/charts.js          dependency-free SVG charts
-js/data.js            modes, difficulty tiers, defaults
+js/data.js            modes, difficulty tiers, hotbar presets, defaults
 js/utils.js           formatting helpers
 ```
 
@@ -100,7 +118,7 @@ npm test
 `test/app.test.mjs` drives the real app inside jsdom — routing, sessions, judging, keybinds, hotbar
 filtering, persistence, recovery — and `test/modes.test.mjs` covers engine math: difficulty windows,
 ramping, sequence growth, 10-heart rules and record tracking. Both suites fail on any console error or
-uncaught exception. Current status: **55 + 48 assertions, all passing**.
+uncaught exception. Current status: **75 + 48 assertions, all passing**.
 
 ## Design notes
 
@@ -108,6 +126,8 @@ uncaught exception. Current status: **55 + 48 assertions, all passing**.
   view shares the same chrome. Panels are translucent glass with an inner hairline, a 2px outer edge and
   cream corner brackets; the active rail item and primary button use the cream accent from the artwork.
 * The hotbar, hearts, hunger and XP bar are rebuilt as SVG pixel art so they stay crisp at any HUD scale.
+  All 23 items are hand-plotted 16×16 grids resolved to `<symbol>`/`<use>`, so switching items costs no
+  network requests and no re-layout.
 * The arena plays inside the same cherry-grove scene, dimmed by a vignette and a bottom scrim so the
   hotbar, hearts and target cue stay readable over a bright sunset.
 * Type is two-tier: Silkscreen (SIL Open Font License, self-hosted in `assets/fonts/`) for the wordmark,

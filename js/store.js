@@ -309,6 +309,16 @@ export function resetLoadout() {
   save();
 }
 
+/** Replace the whole hotbar (used by the preset picker). */
+export function setLoadout(slots) {
+  if (!Array.isArray(slots)) return false;
+  const next = slots.slice(0, SLOT_COUNT).filter((id) => ITEM_IDS.includes(id));
+  if (next.length !== SLOT_COUNT) return false;
+  state.loadout = next;
+  save();
+  return true;
+}
+
 /* ---------------- stats ---------------- */
 
 export function accuracyOf(correct, incorrect) {
